@@ -1,0 +1,186 @@
+package sdg13;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Sdg13 {
+    // Abstract class for users
+    abstract static class User {
+        protected String username;
+        protected String password;
+
+        public User(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        // Abstract method for login
+        abstract boolean login(String username, String password);
+    }
+
+    // Admin class inheriting from User
+    static class Admin extends User {
+        // Constructor
+        public Admin(String username, String password) {
+            super(username, password);
+        }
+
+        // Method to login as admin
+        @Override
+        boolean login(String username, String password) {
+            // Admin login logic here
+            return this.username.equals(username) && this.password.equals(password);
+        }
+    }
+
+    // General user class inheriting from User
+    static class GeneralUser extends User {
+        // Constructor
+        public GeneralUser(String username, String password) {
+            super(username, password);
+        }
+
+        // Method to login as general user
+        @Override
+        boolean login(String username, String password) {
+            // General user login logic here
+            return this.username.equals(username) && this.password.equals(password);
+        }
+    }
+
+    // Class for disaster management strategies
+    static class DisasterManagement {
+        private ArrayList<String> strategies;
+
+        public DisasterManagement() {
+            this.strategies = new ArrayList<>();
+            // Add some default strategies
+            this.strategies.add("Build stronger infrastructure to withstand extreme weather events");
+            this.strategies.add("Promote renewable energy sources to reduce greenhouse gas emissions");
+            this.strategies.add("Implement early warning systems for natural disasters");
+        }
+
+        public void addStrategy(String strategy) {
+            this.strategies.add(strategy);
+        }
+
+        public void displayStrategies() {
+            System.out.println("Disaster Management Strategies:");
+            for (int i = 0; i < strategies.size(); i++) {
+                System.out.println((i + 1) + ". " + strategies.get(i));
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        // Sample admin and user
+        Admin admin = new Admin("team2@gmail.com", "admin123");
+        GeneralUser user1 = new GeneralUser("user1", "user123");
+
+        // Adding users to the ArrayList
+        ArrayList<User> users = new ArrayList<>();
+        users.add(admin);
+        users.add(user1);
+
+        Scanner scanner = new Scanner(System.in);
+        boolean loggedIn = false;
+
+        // Login loop
+        do {
+            System.out.print("Enter username: ");
+            String username = scanner.nextLine();
+            System.out.print("Enter password: ");
+            String password = scanner.nextLine();
+
+            // Iterate through users to check login credentials
+            for (User user : users) {
+                if (user.login(username, password)) {
+                    loggedIn = true;
+                    System.out.println("Login successful!");
+                    // Based on user type, perform appropriate actions
+                    if (user instanceof Admin) {
+                        if (username.equals("team2@gmail.com")) {
+                            adminFunctionalities();
+                        } else {
+                            System.out.println("You do not have admin privileges.");
+                            loggedIn = false; // Prevent access if not admin
+                        }
+                    } else {
+                        generalUserFunctionalities();
+                    }
+                    break;
+                }
+            }
+            if (!loggedIn) {
+                System.out.println("Invalid username or password. Please try again.");
+            }
+        } while (!loggedIn);
+    }
+
+    // Method for admin functionalities
+    private static void adminFunctionalities() {
+        DisasterManagement management = new DisasterManagement();
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        do {
+            System.out.println("\nAdmin Menu:");
+            System.out.println("1. View Strategies");
+            System.out.println("2. Add Strategy");
+            System.out.println("3. Logout");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    management.displayStrategies();
+                    break;
+                case 2:
+                    System.out.print("Enter new strategy: ");
+                    String newStrategy = scanner.nextLine();
+                    management.addStrategy(newStrategy);
+                    System.out.println("Strategy added successfully!");
+                    break;
+                case 3:
+                    System.out.println("Logging out...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 3);
+    }
+
+    // Method for general user functionalities
+    private static void generalUserFunctionalities() {
+        DisasterManagement management = new DisasterManagement();
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        do {
+            System.out.println("\nGeneral User Menu:");
+            System.out.println("1. View Strategies");
+            System.out.println("2. Logout");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    management.displayStrategies();
+                    break;
+                case 2:
+                    System.out.println("Logging out...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 2);
+    }
+}
+
+
+
+	
+	
+	
+
+	
+	   
